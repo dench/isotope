@@ -1,0 +1,81 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Handles the creation of table `page`.
+ */
+class m161031_130124_create_page_table extends Migration
+{
+    /**
+     * @inheritdoc
+     */
+    public function up()
+    {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+
+        $this->createTable('page', [
+            'id' => $this->primaryKey(),
+            'slug' => $this->string(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
+            'position' => $this->integer()->notNull()->defaultValue(0),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)
+        ], $tableOptions);
+
+        $this->createTable('page_lang', [
+            'page_id' => $this->integer()->notNull(),
+            'lang_id' => $this->string(3)->notNull(),
+            'name' => $this->string()->notNull(),
+            'h1' => $this->string()->notNull(),
+            'title' => $this->string()->notNull(),
+            'keywords' => $this->string(),
+            'description' => $this->text(),
+            'text' => $this->text()
+        ], $tableOptions);
+
+        $this->addPrimaryKey('pk-page_lang', 'page_lang', ['page_id', 'lang_id']);
+
+        $this->addForeignKey('fk-page_lang-page_id', 'page_lang', 'page_id', 'page', 'id', 'CASCADE');
+
+        $this->addForeignKey('fk-page_lang-lang_id', 'page_lang', 'lang_id', 'language', 'id', 'CASCADE', 'CASCADE');
+
+        $this->insert('page', [
+            'slug' => 'index',
+            'created_at' => time(),
+            'updated_at' => time()
+        ]);
+
+        $this->batchInsert('page_lang', ['page_id', 'lang_id', 'name', 'h1', 'title'], [
+            [1, 'en', 'Home', 'Home', 'Home'],
+            [1, 'de', 'Home', 'Home', 'Home'],
+            [1, 'es', 'Home', 'Home', 'Home'],
+            [1, 'fr', 'Home', 'Home', 'Home'],
+            [1, 'pt', 'Home', 'Home', 'Home'],
+            [1, 'it', 'Home', 'Home', 'Home'],
+            [1, 'pl', 'Home', 'Home', 'Home'],
+            [1, 'ru', 'Home', 'Home', 'Home'],
+            [1, 'uk', 'Home', 'Home', 'Home'],
+            [1, 'zh', 'Home', 'Home', 'Home'], // Китайский
+            [1, 'ja', 'Home', 'Home', 'Home'], // Японский
+            [1, 'ko', 'Home', 'Home', 'Home'], // Корейский
+            [1, 'ar', 'Home', 'Home', 'Home'] // Арабский
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function down()
+    {
+        $this->dropForeignKey('fk-page_lang-lang_id', 'page_lang');
+
+        $this->dropForeignKey('fk-page_lang-page_id', 'page_lang');
+
+        $this->dropPrimaryKey('pk-page_lang', 'page_lang');
+
+        $this->dropTable('page_lang');
+
+        $this->dropTable('page');
+    }
+}

@@ -30,8 +30,11 @@ $config = [
                 '' => 'site/index',
                 'image/<size:[0-9a-z\-]+>/<name>.<extension:[a-z]+>' => 'image/default/index',
                 '<controller:gallery|blog>' => '<controller>/index',
-                '<module:admin>' => 'admin/default/index',
-                '<action:(contacts)>' => 'site/<action>',
+                'admin' => 'admin/default/index',
+                'admin/<action>' => 'admin/default/<action>',
+                'setting' => 'personal/default/index',
+                'setting/<action>' => 'personal/default/<action>',
+                '<action:(contacts|login|signup|logout|auth)>' => 'site/<action>',
                 '<slug:[0-9a-z\-]+>' => 'site/page',
                 'sitemap.xml' => 'sitemap/index',
             ],
@@ -41,20 +44,22 @@ $config = [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'js' => [
-                        YII_ENV_DEV ? 'jquery.js' : 'jquery.min.js'
+                        'https://code.jquery.com/jquery-3.2.1.min.js'
                     ]
                 ],
                 'yii\bootstrap\BootstrapAsset' => [
-                    'css' => [
-                        YII_ENV_DEV ? 'css/bootstrap.css' : 'css/bootstrap.min.css',
-                    ]
+                    'css' => []
                 ],
                 'yii\bootstrap\BootstrapPluginAsset' => [
-                    'js' => [
-                        YII_ENV_DEV ? 'js/bootstrap.js' : 'js/bootstrap.min.js',
-                    ]
+                    'js' => []
                 ]
             ],
+        ],
+        'formatter' => [
+            'dateFormat' => 'php:Y-m-d',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'USD',
         ],
     ],
 ];

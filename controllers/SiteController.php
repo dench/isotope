@@ -2,9 +2,15 @@
 
 namespace app\controllers;
 
+use app\components\AuthHandler;
+use app\helpers\Timezone;
+use app\models\LoginForm;
+use app\models\SignupForm;
 use dench\page\models\Page;
+use rmrevin\yii\geoip\HostInfo;
 use Yii;
-use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\Controller;
 use app\models\ContactForm;
 
@@ -16,14 +22,19 @@ class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
         ];
+    }
+
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 
     /**
@@ -58,7 +69,6 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', [
@@ -71,14 +81,68 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        return $this->render('signup');
+        $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Thank you very much for registering. Your account has been successfully created.'));
+                    return $this->redirect(Url::to(['/personal/default/profile']));
+                }
+            }
+        } else {
+            $model->country_id = (new HostInfo())->getCountryCode();
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
     }
 
     /**
      * Displays Sign-in.
      */
-    public function actionSignin()
+    public function actionLogin()
     {
-        return $this->render('signin');
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->redirect(Url::to(['/personal/default/index']));
+        }
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Logout action.
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
+    }
+
+    public function actionAjaxTimezone()
+    {
+        $out = [];
+
+        if ($depdrop_parents = Yii::$app->request->post('depdrop_parents')) {
+            $id = end($depdrop_parents);
+            $list = Timezone::getList($id);
+            foreach ($list as $k => $v) {
+                $out[] = [
+                    'id' => $k,
+                    'name' => $v,
+                ];
+            }
+        }
+
+        $selected = reset($out);
+
+        echo Json::encode(['output' => $out, 'selected' => @$selected['id']]);
+        return;
     }
 }

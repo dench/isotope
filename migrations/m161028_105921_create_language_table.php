@@ -15,8 +15,8 @@ class m161028_105921_create_language_table extends Migration
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
 
         $this->createTable('language', [
-            'id' => $this->string(3)->notNull(),
-            'name' => $this->string(31)->notNull(),
+            'id' => $this->string(2)->notNull(),
+            'name' => $this->string(30)->notNull(),
             'position' => $this->smallInteger()->defaultValue(0),
             'enabled' => $this->boolean()->notNull()->defaultValue(1)
         ], $tableOptions);

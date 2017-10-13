@@ -28,6 +28,7 @@ use \yii\bootstrap\Widget;
  */
 class Alert extends Widget
 {
+    public $template = "<div class=\"container\">{alert}</div>";
     /**
      * @var array the alert types configuration for the flash messages.
      * This array is setup as $key => $value, where:
@@ -85,11 +86,13 @@ class Alert extends Widget
                     $this->options['class'] = $this->alertTypes[$type]['class'] . $appendCss;
                     $this->options['id'] = $this->getId() . '-' . $type;
 
-                    echo BootstrapAlert::widget([
+                    $alert = BootstrapAlert::widget([
                         'body' => $this->alertTypes[$type]['icon'] . $message,
                         'closeButton' => $this->closeButton,
                         'options' => $this->options,
                     ]);
+
+                    echo strtr($this->template, ['{alert}' => $alert]);
                 }
 
                 $session->removeFlash($type);

@@ -25,7 +25,7 @@ class m161031_130124_create_page_table extends Migration
 
         $this->createTable('page_lang', [
             'page_id' => $this->integer()->notNull(),
-            'lang_id' => $this->string(3)->notNull(),
+            'lang_id' => $this->string(2)->notNull(),
             'name' => $this->string()->notNull(),
             'h1' => $this->string()->notNull(),
             'title' => $this->string()->notNull(),

@@ -3,6 +3,16 @@ div.required label.control-label:after {
   color: red;
 }
 
+.navbar {
+  button.nav-link {
+    cursor: pointer;
+    color: #007bff;
+    background: transparent;
+    border: none;
+    margin: 0;
+  }
+}
+
 .nav-tabs {
   margin-bottom: 10px;
 }

@@ -35,6 +35,9 @@ return [
                 ],
             ],
         ],
+        'personal' => [
+            'class' => 'app\modules\personal\Module',
+        ],
         'image' => [
             'class' => 'dench\image\Module',
         ],

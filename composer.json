@@ -16,8 +16,9 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.6",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-bootstrap": "2.1.x-dev",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "yiisoft/yii2-authclient": "~2.1.0",
         "dench/yii2-language": "@dev",
         "dench/yii2-page": "@dev",
         "dench/yii2-image": "@dev",
@@ -26,7 +27,13 @@
         "voskobovich/yii2-linker-behavior": "^4.0",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "kartik-v/bootstrap-fileinput": "4.3.8",
-        "bower-asset/twbs/bootstrap-sass": "*"
+        "kartik-v/yii2-widget-activeform": "@dev",
+        "kartik-v/yii2-widget-depdrop": "@dev",
+        "kartik-v/yii2-social": "@dev",
+        "himiklab/yii2-recaptcha-widget" : "*",
+        "bower-asset/bootstrap": "~4.0.0@beta",
+        "rmrevin/yii2-geoip": "~1.1",
+        "umpirsky/country-list": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

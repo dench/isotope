@@ -11,6 +11,8 @@ return [
         'path' => dirname(__DIR__) . '/files',
     ],
     'image' => [
+        'jpeg_quality' => 100,
+        'convert' => 'true',
         'path' => 'image',
         'watermark' => [
             'enabled' => true,
